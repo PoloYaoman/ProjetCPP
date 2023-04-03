@@ -7,6 +7,9 @@ class HP {
         int hp_level;   // Niveau de points de vie actuel
 
     public:
+        HP(int total) : hp_total(total) {};
+        HP(int total, int level) : hp_total(total), hp_level(level) {};
+
         void set_hp_total(int total) { hp_total = total; }
         int get_hp_level() { return hp_level; }
         int get_hp_total() { return hp_total; }
