@@ -1,0 +1,30 @@
+
+Mise a jour 03/04/23 :
+
+
+===PLANIFICATION===
+
+- Conseptualisation de l'idee : 
+    Nous allons creer une mini-rpg en 2D ou plusieurs personnages vont se 
+    deplacer, interagir avec les autres et se battre a travers une mecanique
+    des armures et des Armes
+
+- Creation de l'UML initial : 
+    Classes Personnage, HP, Position, Armure, Arme, Carte, Obstacle
+
+
+===CODE===
+
+- Classe Personnage : 
+    1. Ajout des differents constructeurs, getteurs, setteurs
+    2. Methode attaque 
+    TODO : Constructeur par copie
+
+- Classe HP : 
+    1. Ajout des differents constructeurs, getteurs, setteurs
+    2. Methode prise de degats 
+    3. Methode soin 
+
+- Classe Position : 
+    1. Ajout des differents constructeurs, getteurs, setteurs
+    2. Methode calculer une distance 
