@@ -1,0 +1,17 @@
+
+1. RPG 2D - style Pokemon 
+2. Mecanique de combat 
+
+Mecaniques : 
+- Deplacement (1)
+ - Gestion de la carte (2)
+- Combat (1)
+ - Barre HP (1)
+ - Armes (2)
+ - Consommables (3) 
+ - Armures (3)
+- Interaction (1)
+ - Decisions (2)
+ - Incidences (2) 
+- Personnages (1)
+ - Niveaux (4)
