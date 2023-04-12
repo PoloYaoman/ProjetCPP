@@ -17,10 +17,10 @@ class Window {
     public:
         /* Constructeur par defaut : cree une fenetre de 20 cases 
         Constructeur par taille cree un tableau des cases de taille 35 par defaut */
-        Window() : Window(20,35) {};
+        Window() : Window(10,50) {};
         Window (vector<Tile*> c_tiles) : 
-            _tiles(c_tiles), _size(c_tiles.size()) {};
-        Window (int size, int res = 35);
+            _tiles(c_tiles), _size(c_tiles.size()), _res(c_tiles[0]->size()) {};
+        Window (int size, int res = 50);
 
         /* Accesseurs pour les cases */
         const Tile* tile(int x, int y) const { return _tiles[_size*x + y]; };    
