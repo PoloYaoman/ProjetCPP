@@ -34,6 +34,8 @@ class Window {
         void res(int nres);
 
         void renderWindow();    // Montrer une fenetre avec les cases 
+
+        static void map1(); // Une premeiere carte par defaut - que des cases "chemin"
 };
 
 #endif

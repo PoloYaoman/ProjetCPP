@@ -7,7 +7,7 @@
 using namespace std;
 
 class Tile {
-    private:
+    protected:
         //bibliotheque des textures classee par nom du fichier
         static map<string, sf::Texture*> _textures; 
         sf::Texture _texture;
@@ -39,6 +39,16 @@ class Tile {
 
         // position de la case dans la fenetre
         void move(float x, float y);   
+
+        // taille de la texture 
+        const int getTextureX() const { return this->_texture.getSize().x; };
+        const int getTextureY() const{ return this->_texture.getSize().y; };
+
+        // mettre a l'echelle le sprite 
+        void setScale2Texture ();
+
+        // afficher la case
+        virtual void renderTile(sf::RenderWindow& win, int x, int y);
 };
 
 #endif

@@ -7,10 +7,10 @@ Window::Window(int size, int res) {
     this->_size = size;
     this->_res = res;
 
-    for (int i=0; i<size*size; i++) {
+    for (int i=0; i<size*size; i++)
         this->_tiles.push_back(new Tile()); //meettre des cases une par une
-        this->_tiles[i]->size(res); //changer leur resolution
-    }
+
+    this->res(res); //changer leur resolution
 }
 
 /* Setter d'une case */
@@ -46,11 +46,7 @@ void Window::renderWindow() {
             for (int j = 0; j < this->_size; j++) {
                 int index = this->_size*i + j;
                 //mettre la case a la bonne position 
-                this->_tiles[index]
-                    ->move(float(this->_res * i), float(this->_res * j));
-                cout << "Position x = " << this->_res * i << " , y = " << this->_res * j << endl;
-
-                win.draw(_tiles[index]->sprite());
+                this->_tiles[index]->renderTile(win, i, j);
             }
         }
 

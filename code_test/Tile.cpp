@@ -14,19 +14,15 @@ Tile::Tile(string filename, int size) {
 
     this->_texture = *(this->texture(filename));
 
-    int wid = this->_texture.getSize().x;  //prendre la taille de l'image
-    int hgt = this->_texture.getSize().y;
-
-    this->_sprite.setTexture(this->_texture);  //donner la texture au sprite
-    this->_sprite.setScale(float(size)/wid,float(size)/hgt);  //mettre a l'echelle de size
+    this->setScale2Texture();
 }
 
 /* Setter a partir de sprite */
 void Tile::sprite(sf::Sprite& n_sprite) {
     this->_texture = *(n_sprite.getTexture());
     //trouver la taille du sprite
-    int sx = this->_texture.getSize().x * n_sprite.getScale().x;
-    int sy = this->_texture.getSize().y * n_sprite.getScale().y;
+    int sx = this->getTextureX() * n_sprite.getScale().x;
+    int sy = this->getTextureY() * n_sprite.getScale().y;
 
     this->_sprite = n_sprite;
 
@@ -40,12 +36,7 @@ void Tile::sprite(sf::Sprite& n_sprite) {
 const bool Tile::sprite(string filename){
     this->_texture = *(texture(filename));
 
-    int wid = this->_texture.getSize().x;  //prendre la taille de l'image
-    int hgt = this->_texture.getSize().y;
-
-    //assigner la nouvelle texture et mettre a l'echelle de base
-    this->_sprite.setTexture(this->_texture);  
-    this->_sprite.setScale(float(this->_size)/wid, float(this->_size)/hgt);
+    this->setScale2Texture();
 
     return true;
 }
@@ -54,12 +45,7 @@ const bool Tile::sprite(string filename){
 void Tile::size(int size) {
     this->_size = size;
 
-    int wid = this->_texture.getSize().x;  //prendre la taille de l'image
-    int hgt = this->_texture.getSize().y;
-
-    //mettre a la nouvelle echelle
-    this->_sprite.setScale(float(size)/wid, float(size)/hgt);
-    cout << "scale = " << this->_sprite.getScale().x << endl;
+    this->setScale2Texture();
 }
 
 /* Charge une texture dans la map si elle est pas deja dedans et renvoie la texture 
@@ -78,4 +64,18 @@ sf::Texture* Tile::texture (string filename) {
 void Tile::move(float x, float y) {
     this->_sprite.setPosition(0.f, 0.f);
     this->_sprite.move(x, y);
+}
+
+void Tile::setScale2Texture() {
+    int wid = this->_texture.getSize().x;  //prendre la taille de l'image
+    int hgt = this->_texture.getSize().y;
+
+    //assigner la nouvelle texture et mettre a l'echelle de base
+    this->_sprite.setTexture(this->_texture);  
+    this->_sprite.setScale(float(this->_size)/wid, float(this->_size)/hgt);
+}
+
+void Tile::renderTile(sf::RenderWindow& win, int x, int y) {
+    this->move(this->_size*x, this->_size*y);
+    win.draw(this->_sprite);
 }
