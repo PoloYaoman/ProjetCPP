@@ -146,7 +146,7 @@ public:
         void setPositionRight(void);
 
 
-        // appel les methodes privé move
+        // appel les methodes privÃ© move
 
         void animationMoveDown(void);
 
@@ -155,6 +155,14 @@ public:
         void animationMoveLeft(void);
 
         void animationMoveRight(void);
+    
+        void recoilLeft(void);
+    
+        void recoilRight(void);
+    
+        void recoilDown(void);
+    
+        void recoilUp(void);
 
 
 #endif
