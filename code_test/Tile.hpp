@@ -2,18 +2,14 @@
 #define TILE_HPP
 
 #include <SFML/Graphics.hpp>
-#include <map>
 
 using namespace std;
 
 class Tile {
     protected:
-        //bibliotheque des textures classee par nom du fichier
-        static map<string, sf::Texture*> _textures; 
         sf::Texture _texture;
         sf::Sprite _sprite;
         int _size;   // taille en pixels
-
 
     public:
         /* Constructeur par defaut : cree une case avec une tete de Jerma de 
@@ -33,9 +29,6 @@ class Tile {
         /* Accesseurs de size */
         const int& size() const { return _size; };
         void size(int size);
-
-        /* Accesseurs de textures */
-        sf::Texture* texture (string filename);
 
         // position de la case dans la fenetre
         void move(float x, float y);   

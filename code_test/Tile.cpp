@@ -1,18 +1,16 @@
 #include <iostream>
 
+#include "TexturesLib.hpp"
 #include "Tile.hpp"
 
 using namespace std;
-
-// initialisation de la map static 
-map<string, sf::Texture*> Tile::_textures = *(new map<string, sf::Texture*>());
 
 /* Constructeur a partir du nom de fichier de la texture et la taille de la 
 case*/
 Tile::Tile(string filename, int size) {
     this->_size = size;
 
-    this->_texture = *(this->texture(filename));
+    this->_texture = *(TexturesLib::assignTexture(filename));
 
     this->setScale2Texture();
 }
@@ -34,7 +32,7 @@ void Tile::sprite(sf::Sprite& n_sprite) {
 
 /* Setter a partir du nom de fichier */
 const bool Tile::sprite(string filename){
-    this->_texture = *(texture(filename));
+    this->_texture = *(TexturesLib::assignTexture(filename));
 
     this->setScale2Texture();
 
@@ -46,18 +44,6 @@ void Tile::size(int size) {
     this->_size = size;
 
     this->setScale2Texture();
-}
-
-/* Charge une texture dans la map si elle est pas deja dedans et renvoie la texture 
-demandee*/
-sf::Texture* Tile::texture (string filename) {
-    if (this->_textures.count(filename) == 0) {
-        this->_textures.insert({filename, new sf::Texture});
-        if (!this->_textures[filename]->loadFromFile(filename))    //charger le fichier
-            throw runtime_error("Couldn't load texture from file " + filename);
-    }
-
-    return this->_textures[filename];
 }
 
 /* Position de la case dans la fenetre */

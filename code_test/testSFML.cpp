@@ -3,10 +3,7 @@
 
 int main() {
     
-    Window* win = new Window;
-
-    WalkableTile* wt = new WalkableTile();
-    win->tile(5,5,*wt);
+    Window* win = Window::map1();
 
     win->renderWindow();
 

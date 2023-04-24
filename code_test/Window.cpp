@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Window.hpp"
+#include "WalkableTile.hpp"
 
 /* Constructeur a partir du nombre des cases et leur taille */
 Window::Window(int size, int res) {
@@ -14,11 +15,11 @@ Window::Window(int size, int res) {
 }
 
 /* Setter d'une case */
-void Window::tile(int x, int y, Tile& n_tile) {
+void Window::tile(int x, int y, Tile* n_tile) {
     int index = this->_size*x + y;  //chercher la bonne case
     //mettre la nouvelle case a la bonne resolution 
-    if (this->_res != n_tile.size())    n_tile.size(this->_res);
-    this->_tiles[index] = &n_tile;
+    if (this->_res != n_tile->size())   n_tile->size(this->_res);
+    this->_tiles[index] = n_tile;
 }
 
 /* Changer la taille des cases */
@@ -52,4 +53,26 @@ void Window::renderWindow() {
 
         win.display();
     }
+}
+
+Window* Window::map1() {
+    Window* nwin = new Window(15,40);
+
+    for (int i = 0; i < nwin->_size; i++) {
+        for (int j = 0; j < nwin->_size; j++) {
+            WalkableTile* nt = new WalkableTile();
+            nwin->tile(i,j,nt);
+        }
+    }   
+
+    return nwin;
+}
+
+const bool Window::placeCharacter(int x, int y, Character* chr) {
+    if (x < 0 || y < 0 || x >= this->_size || y >= this->_size) {
+        throw std::invalid_argument("The coordinates must be inside the window");
+        return false;
+    }
+    chr->pos(x,y);
+    return true;
 }

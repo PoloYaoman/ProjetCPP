@@ -3,7 +3,7 @@
 
 #include "Tile.hpp"
 
-class Character : public Tile {
+class Character {
     private:
         sf::Texture _texture;
         sf::Sprite _sprite;
@@ -21,16 +21,19 @@ class Character : public Tile {
         Character(string filename, int size = 35, int posX = 0, int posY = 0);
 
         /* Accesseurs de _posX et _posY*/
-        const bool pos(int x, int y);
-        const int posX() const;
-        const int posY() const;
+        void pos(int x, int y) { this->_posX = x; this->_posY = y; };
+        const int posX() const { return this->_posX; };
+        const int posY() const { return this->_posY; };
 
         /* Faire deplacer le personnage d'une case dans une direction : 
         "U", "D", "L", "R", "UL", "UR", "DL", "DR" */
-        const bool go(string direction);
+        void go(string dir, int size);
 
         // Affichage du personnage
         void renderTile(sf::RenderWindow& win, int x, int y, int size_tile);
+
+        void setScale2Texture();
+        void move(float x, float y);  
 };
 
 #endif
