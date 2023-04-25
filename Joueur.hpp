@@ -1,16 +1,15 @@
-#ifndef _JOUEUR_HPP_
-#define _JOUEUR_HPP_
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
 #include <vector>
 
-#include "Heart.hpp"
-#include "Rubis.hpp"
+//#include "Heart.hpp"
+//#include "Rubis.hpp"
 
-class Joueur
-{
+class Joueur {
 private:
     // 4 orientations (haut , bas , gauche , droite) possible et 3 etats possible du joeur ( arret, pied gauche en avant ou pied droit en avant)
     const char* s0,
@@ -49,8 +48,8 @@ private:
         sf::Vector2f spawn;
 
         // class
-        Heart m_Heart;
-        Rubis m_Rubis;
+        // Heart m_Heart;
+        // Rubis m_Rubis;
 
         // Function
         sf::Sprite loadSprite(const char *name, sf::Vector2f vector); // cette focntion appel loadTexture et applique enssuite la texture au sprite
@@ -163,6 +162,6 @@ public:
         void recoilDown(void);
     
         void recoilUp(void);
-
+};
 
 #endif
