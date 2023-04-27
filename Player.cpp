@@ -36,6 +36,11 @@ Player::Player(string texture_file_up, string texture_file_down, string texture_
 }
 
 Player::Player(const Player& cp) {
+    *this = cp;
+}
+
+
+Player& Player::operator=(const Player& cp) {
     this->_ort_textures.insert({'U', cp._ort_textures.at('U')});
     this->_ort_textures.insert({'D', cp._ort_textures.at('D')});
     this->_ort_textures.insert({'L', cp._ort_textures.at('L')});
@@ -52,10 +57,9 @@ Player::Player(const Player& cp) {
     this->_maxHP = cp._maxHP;
     this->_hp = cp._hp;
 
-    _posX = -1; _posY = -1; // hors carte tant que pas place - on ne met pas deux joueurs au mme endroit 
+    _posX = -1; _posY = -1; // hors carte tant que pas place - on ne met pas deux joueurs au mme endroit
+
+    return *this;
 }
 
 
-Player& Player::operator=(const Player& cp) {
-    return Player(cp);
-}
