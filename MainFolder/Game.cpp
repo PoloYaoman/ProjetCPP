@@ -1,14 +1,14 @@
-#include "Game.h"
-#include "ControlInterface.h"
-#include "DrawInterface.h"
+#include "Game.hpp"
+// #include "ControlInterface.hpp"
+// #include "DrawInterface.hpp"
 
-Game::Game(void)/*liste des wall et ground à charger type, greenWall(path) */ {
+Game::Game()/*liste des wall et ground ï¿½ charger type, greenWall(path) */ {
 
     setMapUpdate();
 
 }
 
-bool Game::playerIsAlive(void) {
+bool Game::playerIsAlive(Player& player) {
     return player.isAlive();
 }
 
@@ -16,43 +16,51 @@ bool Game::playerIsAlive(void) {
 ///////////////////////////gestion des colisions///////////////////////////////////////////////////////////////////
 
 
-void ColisionInterface::collideMonster(void) {
-    if (collideTwoSprite64x64(player.getPosition(), monster.getPosition())) {// si il y a colision avec le monstre
+void ColisionInterface::collideMonster(Player& player, Monster& monster) {
+    if (collideTwoSprite64x64(player.position(), monster.position())) {// si il y a colision avec le monstre
         if (monster.isAlive()) {//si le monstre est toujours en vie
-            player.setDamage(monster.getPower());//le monstre inflige des degats au joueur
-            int collide = collidePosition(player.getPosition(), monster.getPosition());// retourne le type de collision
+            player.receiveDamage(monster.power());//le monstre inflige des degats au joueur
 
-            if (!sword.getExecution()) {
-                if (collide == DOWN_COLLIDE && !previewCollide(player.getPosition(), sf::Vector2f(0.f, -64.f)) &&
-                    !previewLimitMap(player.getPosition(), sf::Vector2f(0.f, -64.f))) {// colision de haut en bas avec un monstre
-                    player.recoilUp();// fait reculer le joueur vers le haut de l'ecran
-                }
-                else if (collide == UP_COLLIDE && !previewCollide(player.getPosition(), sf::Vector2f(0.f, 64.f)) &&
-                    !previewLimitMap(player.getPosition(), sf::Vector2f(0.f, 64.f))) { // colision de bas en haut avec un monstre
-                    player.recoilDown();// fait reculer le joueur vers le bas de l'ecran
-                }
-                else if (collide == RIGHT_COLLIDE &&
-                    !previewCollide(player.getPosition(), sf::Vector2f(-64.f, 0.f)) &&
-                    !previewLimitMap(player.getPosition(), sf::Vector2f(-64.f, 0.f))) {// colision de gauche à droite
-                    player.recoilLeft();// fait reculer le joueur vers la gauche de l'ecran
-                }
-                else if (collide == LEFT_COLLIDE &&
-                    !previewCollide(player.getPosition(), sf::Vector2f(64.f, 0.f)) &&
-                    !previewLimitMap(player.getPosition(), sf::Vector2f(64.f, 0.f))) {//colision de droite a gauche
-                    player.recoilRight();// fait reculer le joueur vers la droite de l'ecran
-                }
-            }
+            //int collide = collidePosition(player.position(), monster.position());// retourne le type de collision
+
+            // if (!sword.getExecution()) {
+            //     if (collide == DOWN_COLLIDE && !previewCollide(player.position(), sf::Vector2f(0.f, -64.f)) &&
+            //         !previewLimitMap(player.position(), sf::Vector2f(0.f, -64.f))) {// colision de haut en bas avec un monstre
+            //         player.recoilUp();// fait reculer le joueur vers le haut de l'ecran
+            //     }
+            //     else if (collide == UP_COLLIDE && !previewCollide(player.position(), sf::Vector2f(0.f, 64.f)) &&
+            //         !previewLimitMap(player.position(), sf::Vector2f(0.f, 64.f))) { // colision de bas en haut avec un monstre
+            //         player.recoilDown();// fait reculer le joueur vers le bas de l'ecran
+            //     }
+            //     else if (collide == RIGHT_COLLIDE &&
+            //         !previewCollide(player.position(), sf::Vector2f(-64.f, 0.f)) &&
+            //         !previewLimitMap(player.position(), sf::Vector2f(-64.f, 0.f))) {// colision de gauche ï¿½ droite
+            //         player.recoilLeft();// fait reculer le joueur vers la gauche de l'ecran
+            //     }
+            //     else if (collide == LEFT_COLLIDE &&
+            //         !previewCollide(player.position(), sf::Vector2f(64.f, 0.f)) &&
+            //         !previewLimitMap(player.position(), sf::Vector2f(64.f, 0.f))) {//colision de droite a gauche
+            //         player.recoilRight();// fait reculer le joueur vers la droite de l'ecran
+            //     }
+            // }
         }
-        else if (monster.thereGain()) {//check si on a obtenu un gain en tuant le monstre
+        //else if (monster.thereGain()) {//check si on a obtenu un gain en tuant le monstre
             //si oui on recupere la recompense
-            player.setHeart(monster.getGainLifeValor());
-            player.updateRubis(monster.getGainRubisValor());
-            monster.gainIsGet();
+
+            /* Pas d'interet de faire un test ici, s'il y a du loot on le rajoute a celui du joueur et 
+            sinon on rajoute zero */
+
+        else {
+            player.heal(monster.heartLoot());
+            player.updateRubis(monster.rubisLoot());
         }
+
+        //     monster.gainIsGet();
+        // }
     }
 }
 
-bool ColisionInterface::collideTwoSprite64x64(sf::Vector2f sprite1, sf::Vector2f sprite2) {
+bool ColisionInterface::collideTwoSprite64x64(sf::Vector2f sprite1, sf::Vector2f sprite2) { 
     float sprite1x = sprite1.x,
         sprite1y = sprite1.y,
 
@@ -94,30 +102,30 @@ int ColisionInterface::collidePosition(sf::Vector2f sprite1, sf::Vector2f sprite
     return NO_COLLIDE;
 }
 
-bool ColisionInterface::collideSword(sf::Vector2f target) {
+bool ColisionInterface::collideSword(Character attacker, Character target) {
     //stockage des positions de l'epee et de la cible
 
-    float sprite1x = sword.getPosition().x,
-        sprite1y = sword.getPosition().y,
+    float sprite1x = float(attacker.posx()),
+        sprite1y = float(attacker.posy()),
 
-        sprite2x = target.x,
-        sprite2y = target.y;
+        sprite2x = float(target.posx()),
+        sprite2y = float(target.posy());
 
     //gestion du type d'attack pour prevoir le type d'animation plus tard
 
-    if (sword.getAttackDown()) {
+    if (attacker.inRange(target.position()) == 'D') {
         return (sprite1x >= sprite2x && sprite1x - SPRITE_SIZE <= sprite2x + SPRITE_SIZE &&
             sprite1y + SPRITE_SIZE >= sprite2y && sprite1y + SPRITE_SIZE <= sprite2y + SPRITE_SIZE);
     }
-    else if (sword.getAttackLeft()) {
+    else if (attacker.inRange(target.position()) == 'L') {
         return (sprite1x - SPRITE_SIZE <= sprite2x + SPRITE_SIZE && sprite1x - SPRITE_SIZE >= sprite2x &&
             sprite1y >= sprite2y && sprite1y - SPRITE_SIZE <= sprite2y + SPRITE_SIZE);
     }
-    else if (sword.getAttackRight()) {
+    else if (attacker.inRange(target.position()) == 'R') {
         return (sprite1x <= sprite2x + SPRITE_SIZE && sprite1x + SPRITE_SIZE >= sprite2x &&
             sprite1y <= sprite2y + SPRITE_SIZE && sprite1y + SPRITE_SIZE > sprite2y);
     }
-    else if (sword.getAttackUp()) {
+    else if (attacker.inRange(target.position()) == 'U') {
         return (sprite1x + SPRITE_SIZE >= sprite2x && sprite1x <= sprite2x + SPRITE_SIZE &&
             sprite1y - SPRITE_SIZE <= sprite2y + SPRITE_SIZE && sprite1y - SPRITE_SIZE >= sprite2y);
     }
@@ -143,7 +151,7 @@ bool ColisionInterface::previewCollide(sf::Vector2f user, sf::Vector2f moove) {
         collide = collideWall(sf::Vector2f(nextx, nexty), map.getListPositionWall());
     }
     if (map.thereChest() && !collide) {
-        collide = collideTwoSprite64x64(sf::Vector2f(nextx, nexty), map.getChestSprite().getPosition());
+        collide = collideTwoSprite64x64(sf::Vector2f(nextx, nexty), map.getChestSprite().position());
     }
     return collide;
 }
@@ -179,8 +187,8 @@ void ControlInterface::key(const char* key) {
     switch (*key) {
 
     case 'D':
-        if (!sword.getExecution()) { // si l'epée n'est pas en mouvement
-            if (!previewCollide(player.getPosition(), sf::Vector2f(0.f, player.getSpeed() * 1.f))) {// Si le joeur ne va pas rencontrer un obstacle en descendant de une unité
+        if (!sword.getExecution()) { // si l'epï¿½e n'est pas en mouvement
+            if (!previewCollide(player.position(), sf::Vector2f(0.f, player.getSpeed() * 1.f))) {// Si le joeur ne va pas rencontrer un obstacle en descendant de une unitï¿½
                 player.animationMoveDown();// alors le joeur bouge vers le bas
             }
             if (!player.getOrientationDown()) {// si le joeur n'a pas son orientation dans le sens du mouvement , alors on lui done
@@ -192,7 +200,7 @@ void ControlInterface::key(const char* key) {
     case 'L':
 
         if (!sword.getExecution()) {
-            if (!previewCollide(player.getPosition(), sf::Vector2f(player.getSpeed() * -1.f, 0.f))) {
+            if (!previewCollide(player.position(), sf::Vector2f(player.getSpeed() * -1.f, 0.f))) {
                 player.animationMoveLeft();
             }
             if (!player.getOrientationLeft()) {
@@ -204,7 +212,7 @@ void ControlInterface::key(const char* key) {
     case 'R':
 
         if (!sword.getExecution()) {
-            if (!previewCollide(player.getPosition(), sf::Vector2f(player.getSpeed() * 1.f, 0.f))) {
+            if (!previewCollide(player.position(), sf::Vector2f(player.getSpeed() * 1.f, 0.f))) {
                 player.animationMoveRight();
             }
             if (!player.getOrientationRight()) {
@@ -216,7 +224,7 @@ void ControlInterface::key(const char* key) {
     case 'U':
 
         if (!sword.getExecution()) {
-            if (!previewCollide(player.getPosition(), sf::Vector2f(0.f, player.getSpeed() * -1.f))) {
+            if (!previewCollide(player.position(), sf::Vector2f(0.f, player.getSpeed() * -1.f))) {
                 player.animationMoveUp();
             }
             if (!player.getOrientationUp()) {
@@ -229,7 +237,7 @@ void ControlInterface::key(const char* key) {
 
         if (!sword.getExecution()) {
 
-            // on met à true l'orientation de l'epée corresoondante à l'orientation du joeur
+            // on met ï¿½ true l'orientation de l'epï¿½e corresoondante ï¿½ l'orientation du joeur
 
             sword.setOrientationUp(player.getOrientationUp());
             sword.setOrientationDown(player.getOrientationDown());
@@ -238,7 +246,7 @@ void ControlInterface::key(const char* key) {
 
             // On met en mouvement l'epee
 
-            sword.startAnimation(player.getPositionSword(), player.getOrientationValue());
+            sword.startAnimation(player.positionSword(), player.getOrientationValue());
 
         }
 
@@ -341,22 +349,22 @@ void Game::setMapUpdate(void) {
 }
 
 void Game::switchMap(void) {
-    if (player.getPosition().x < 0) {
+    if (player.position().x < 0) {
         map.setMapLeft();
         setMapUpdate();
         player.setPositionLeft();
     }
-    else if (player.getPosition().x > 1024) {
+    else if (player.position().x > 1024) {
         map.setMapRight();
         setMapUpdate();
         player.setPositionRight();
     }
-    else if (player.getPosition().y < 64) {
+    else if (player.position().y < 64) {
         map.setMapUp();
         setMapUpdate();
         player.setPositionUp();
     }
-    else if (player.getPosition().y > 768) {
+    else if (player.position().y > 768) {
         map.setMapDown();
         setMapUpdate();
         player.setPositionDown();
@@ -365,13 +373,13 @@ void Game::switchMap(void) {
 
 void Game::setBackground(void) {
 
-    classicTree.setPositionVector(map.getListPosition(*classicTree_c)); // getListPosition renvoie un veceur de veteur2f ( vecteur de position ) , dont la clé dans HashMap est le const char*  "classicTree_c"  ensuite setPositionVector met sur la map tout les arbres necessaire au positions adequates
+    classicTree.setPositionVector(map.getListPosition(*classicTree_c)); // getListPosition renvoie un veceur de veteur2f ( vecteur de position ) , dont la clï¿½ dans HashMap est le const char*  "classicTree_c"  ensuite setPositionVector met sur la map tout les arbres necessaire au positions adequates
     classicRock.setPositionVector(map.getListPosition(*classicRock_c));
     classicGrass.setPositionVector(map.getListPosition(*classicGrass_c));
 }
 
 void Game::gainChest(void) {
-    if (collideTwoSprite64x64(player.getPosition(), map.getGainSprite().getPosition())) {
+    if (collideTwoSprite64x64(player.position(), map.getGainSprite().position())) {
         player.setHeart(map.getGainLife());
         player.updateRubis(map.getGainRubis());
         map.gainIsGet();
@@ -382,28 +390,28 @@ void Game::gainChest(void) {
 
 void Game::swordAttack(void) {
     if (sword.getExecution()) {
-        if (collideSword(monster.getPosition()) && monster.isAlive()) {
+        if (collideSword(monster.position()) && monster.isAlive()) {
             sword.setDamage(sword.getPower());
             if (monster.isAlive()) {
-                if (player.getOrientationDown() && !previewCollide(monster.getPosition(), sf::Vector2f(0.f, 64.f))) {
+                if (player.getOrientationDown() && !previewCollide(monster.position(), sf::Vector2f(0.f, 64.f))) {
                     monster.recoilDown();
                 }
                 else if (player.getOrientationUp() &&
-                    !previewCollide(monster.getPosition(), sf::Vector2f(0.f, -64.f))) {
+                    !previewCollide(monster.position(), sf::Vector2f(0.f, -64.f))) {
                     monster.recoilUp();
                 }
                 else if (player.getOrientationRight() &&
-                    !previewCollide(monster.getPosition(), sf::Vector2f(64.f, 0.f))) {
+                    !previewCollide(monster.position(), sf::Vector2f(64.f, 0.f))) {
                     monster.recoilRight();
                 }
                 else if (player.getOrientationLeft() &&
-                    !previewCollide(monster.getPosition(), sf::Vector2f(-64.f, 0.f))) {
+                    !previewCollide(monster.position(), sf::Vector2f(-64.f, 0.f))) {
                     monster.recoilLeft();
                 }
             }
             //monsterReceveAttack(x);
         }
-        else if (collideSword(map.getChestSprite().getPosition())) {
+        else if (collideSword(map.getChestSprite().position())) {
             map.oprenChest();
         }
     }
@@ -412,19 +420,19 @@ void Game::swordAttack(void) {
 void Game::monsterReceveAttack(int mob) {
     listMonster[mob].setDamage(sword.getPower());
     if (listMonster[mob].isAlive()) {
-        if (player.getOrientationDown() && !previewCollide(listMonster[mob].getPosition(), sf::Vector2f(0.f, 64.f))) {
+        if (player.getOrientationDown() && !previewCollide(listMonster[mob].position(), sf::Vector2f(0.f, 64.f))) {
             listMonster[mob].recoilDown();
         }
         else if (player.getOrientationUp() &&
-            !previewCollide(listMonster[mob].getPosition(), sf::Vector2f(0.f, -64.f))) {
+            !previewCollide(listMonster[mob].position(), sf::Vector2f(0.f, -64.f))) {
             listMonster[mob].recoilUp();
         }
         else if (player.getOrientationRight() &&
-            !previewCollide(listMonster[mob].getPosition(), sf::Vector2f(64.f, 0.f))) {
+            !previewCollide(listMonster[mob].position(), sf::Vector2f(64.f, 0.f))) {
             listMonster[mob].recoilRight();
         }
         else if (player.getOrientationLeft() &&
-            !previewCollide(listMonster[mob].getPosition(), sf::Vector2f(-64.f, 0.f))) {
+            !previewCollide(listMonster[mob].position(), sf::Vector2f(-64.f, 0.f))) {
             listMonster[mob].recoilLeft();
         }
     }
@@ -435,8 +443,8 @@ void Game::monsterReceveAttack(int mob) {
 
 void Game::moveMonster(void) {
     monster.nextPosition();
-    if (!previewCollide(monster.getPosition(), monster.getNextPosition()) && monster.isAlive() &&
-        !previewLimitMap(monster.getPosition(), monster.getNextPosition())) {
+    if (!previewCollide(monster.position(), monster.getNextPosition()) && monster.isAlive() &&
+        !previewLimitMap(monster.position(), monster.getNextPosition())) {
         monster.move();
     }
 }

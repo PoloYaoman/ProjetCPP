@@ -9,6 +9,9 @@
 #include <vector>
 #include <string>
 
+#include "./MovableObject/Player.hpp"
+
+
 class ColisionInterface {
 
 public:
@@ -24,7 +27,7 @@ public:
     /// Chec if the player's sword is in conctact with the target
     /// \param target the sprite in contact with the sword
     /// \return True if the sprite is in constact with the sword
-    virtual bool collideSword(sf::Vector2f target) = 0;
+    virtual bool collideSword(Character attacker, Character target) = 0;
 
     /// Check if the sprite is in contact with a list of sprite
     /// \param user The sprite Checked
@@ -45,7 +48,7 @@ public:
     virtual bool previewLimitMap(sf::Vector2f user, sf::Vector2f move) = 0;
 
     ///
-    virtual void collideMonster(void) = 0;
+    virtual void collideMonster(Player& player, Monster& monster) = 0;
 
     /// Check where the sprite if in contact
     /// \param sprite1 The sprite who suffered the contact

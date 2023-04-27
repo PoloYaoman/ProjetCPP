@@ -1,5 +1,5 @@
-#ifndef _GAME_H_
-#define _GAME_H_
+#ifndef _GAME_HPP_
+#define _GAME_HPP_
 
 /// Special library
 #include <SFML/Graphics.hpp>
@@ -10,15 +10,15 @@
 #include <string>
 
 /// Header create
-#include "Joueur.h"
-#include "Monster.h"
-#include "Wall.h"
-#include "Ground.h"
-#include "DrawInterface.h"
-#include "ControlInterface.h"
-#include "ColisionInterface.h"
-#include "Sword.h"
-#include "MapGenerator.h"
+#include "./MovableObject/Player.hpp"
+#include "./MovableObject/Monster.hpp"
+//#include "./ImmovableObject/Wall.hpp"
+#include "./ImmovableObject/Ground.hpp"
+#include "DrawInterface.hpp"
+#include "ControlInterface.hpp"
+#include "ColisionInterface.hpp"
+//#include "./Items/Sword.hpp"
+#include "MapGenerator.hpp"
 
 
 /// Size Sprite
@@ -50,14 +50,14 @@ private:
 
     
     /// Class Joueur
-    Joueur player;
+    Player player;
 
     /// Class Monster
     Monster monster;
 
     //Class Wall
-    Wall classicTree,
-        classicRock;
+    // Wall classicTree,
+    //     classicRock;
 
     /// Class Ground
     Ground classicGrass;
@@ -67,7 +67,7 @@ private:
     MapGenerator map;
 
     /// Class Sword
-    Sword sword;
+    //Sword sword;
 
     ////////////////////////////////////////
 
@@ -106,10 +106,10 @@ private:
 
 public:
     /// Default Constructor
-    Game(void);
+    Game() = default;
 
     /// \return true if player is alive
-    bool playerIsAlive(void);
+    bool playerIsAlive(Player& player);
    
 };
 

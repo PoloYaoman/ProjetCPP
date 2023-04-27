@@ -1,9 +1,9 @@
-#include "GameWindow.h"
+#include "GameWindow.hpp"
 
 // Constructor
 GameWindow::GameWindow(void) {
     // Window size : (16* 64) * ((10 * 64) + 64) = 1024 * 704
-    this->window = nullptr; // initialisation à nullptr par mesure de securité
+    this->window = nullptr; // initialisation ï¿½ nullptr par mesure de securitï¿½
     this->window = new sf::RenderWindow(sf::VideoMode(windoWwidth, windowHeight), "Game"); // creation de la fenetre
     std::cout << "window create " << this << std::endl;
 }
@@ -19,7 +19,7 @@ GameWindow::~GameWindow(void) {
 // gestion clavier et souris 
 
 void GameWindow::pollEvent(void) {
-    if (this->window->pollEvent(this->event)) { //permet de vérifier s'il y a un événement en attente dans la file d'attente des événements, si c'st le cas event stock l'evenement
+    if (this->window->pollEvent(this->event)) { //permet de vï¿½rifier s'il y a un ï¿½vï¿½nement en attente dans la file d'attente des ï¿½vï¿½nements, si c'st le cas event stock l'evenement
         if (this->event.type == sf::Event::Closed) { // event=fermeture de la fenetre ?
             this->window->close();
         }
@@ -74,7 +74,7 @@ void GameWindow::limitFrameRate(int frame) { //limite le nombre de FPS
     this->window->setFramerateLimit(frame);
 }
 
-/*void GameWindow::updateWindow(void) { // met a jour la fentre en utilisation des methodes privés
+/*void GameWindow::updateWindow(void) { // met a jour la fentre en utilisation des methodes privï¿½s
     this->window->clear();
     this->drawVectorSprite(this->Game.getDrawingSprite());
     this->drawVectorText(this->Game.getDrawingText());
